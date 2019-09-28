@@ -186,7 +186,7 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         #ifdef OSD_OUTPUT
-        //pack & send LTM packets to SerialPort2 at 10hz.
+        //pack & send LTM packets to Serial2 at 10hz.
         ltm_write(); 
         #endif
         //current activity loop
@@ -685,9 +685,9 @@ void configure_voltage_ratio(MenuItem* p_menu_item) {
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
     Serial.begin(57600);
-    SerialPort1.begin(baudrates[configuration.baudrate]);
+    Serial3.begin(baudrates[configuration.baudrate]);
     #ifdef OSD_OUTPUT
-    SerialPort2.begin(OSD_BAUD);
+    Serial2.begin(OSD_BAUD);
     #endif
 #ifdef DEBUG
     Serial.println("Serial initialised"); 
@@ -1048,6 +1048,7 @@ void playTones(uint8_t alertlevel) {
 
 #if defined(DEBUG)
 void debug() {
+  #if defined(SHOW_DEBUG_ALL)
        Serial.print("mem ");
        int freememory = freeMem();
        Serial.println(freememory);
@@ -1101,6 +1102,7 @@ void debug() {
        Serial.println(uav_flightmode);
        Serial.print("armfsmode");
        Serial.println(ltm_armfsmode);
+  #endif
 }
 #endif
 

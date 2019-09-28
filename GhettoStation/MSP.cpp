@@ -44,8 +44,8 @@ void msp_read() {
   }
   c_state = IDLE;
 
-  while (SerialPort1.available()) {
-    c = SerialPort1.read();
+  while (Serial3.available()) {
+    c = Serial3.read();
 
     if (c_state == IDLE) {
       c_state = (c=='$') ? HEADER_START : IDLE;
@@ -180,7 +180,7 @@ void setMspRequests() {
 //static uint8_t MSPtxChecksum;
 //
 //void serialize8(uint8_t a) {
-//  SerialPort2.write(a);
+//  Serial2.write(a);
 //  MSPtxChecksum ^= a;
 //}
 //void serialize16(int16_t a) {

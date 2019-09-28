@@ -9,18 +9,18 @@
 /* ######################################## HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
-HardwareSerial SerialPort1 = HardwareSerial();
-HardwareSerial SerialDebug = HardwareSerial();
+HardwareSerial SerialPort1 = HardwareSerial(); // Instantiation seems not to be working.
+HardwareSerial SerialDebug = HardwareSerial(); // Instantiation seems not to be working.
  #ifdef OSD_OUTPUT
-  SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
+  SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX); // NOTE! For Teensy SerialPort2 is SoftwareSerial but on Mega it's changed to HardwareSerial Serial2
  #endif
 #endif
 #ifdef MEGA
-HardwareSerial SerialPort1(Serial1);
+HardwareSerial SerialPort1(Serial1); // Instantiation seems not to be working. This is changed to use Serial3 throughout the code.
  #ifdef OSD_OUTPUT
-  HardwareSerial SerialPort2(Serial2);
+  HardwareSerial SerialPort2(Serial2); // Instantiation seems not to be working. This is changed to use Serial2 throughout the code.
  #endif
- HardwareSerial SerialDebug(Serial);
+ HardwareSerial SerialDebug(Serial); // Instantiation seems not to be working. This is changed to use Serial throughout the code.
 #endif
 
 int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait between each byte sent.
