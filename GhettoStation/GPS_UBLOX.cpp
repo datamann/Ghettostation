@@ -63,11 +63,11 @@ void GPS_UBLOX_Class::Read(void)
   byte data;
   int numc;
   
-  numc = Serial3.available();
+  numc = Serial1.available();
   if (numc > 0)
     for (int i=0;i<numc;i++)  // Process bytes received
       {
-      data = Serial3.read();
+      data = Serial1.read();
       switch(UBX_step)     //Normally we start from zero. This is a state machine
       {
       case 0:  

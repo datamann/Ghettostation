@@ -222,7 +222,7 @@ void loop() {
 //######################################## ACTIVITIES #####################################################################
 
 void check_activity() {
-    if (uav_satellites_visible >= 5) { 
+    if (uav_satellites_visible >= 1) { 
         gps_fix = true; 
     } 
     else 
@@ -1105,8 +1105,3 @@ void debug() {
   #endif
 }
 #endif
-
-
-
-
-

@@ -2,7 +2,7 @@
 #define PROTOCOL_UAVTALK                        // OpenPilot / Taulabs protocol
 #define PROTOCOL_MSP                            // MSP from Multiwii 
 #define PROTOCOL_LIGHTTELEMETRY                 // Ghettostation internal protocol. 
-#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+//#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 #define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
 #define PROTOCOL_UBLOX                          //GPS UBLOX binary protocol
 #define COMPASS                                 //Keep it enabled even if unused
@@ -16,7 +16,7 @@ HardwareSerial SerialDebug = HardwareSerial(); // Instantiation seems not to be 
  #endif
 #endif
 #ifdef MEGA
-HardwareSerial SerialPort1(Serial1); // Instantiation seems not to be working. This is changed to use Serial3 throughout the code.
+HardwareSerial SerialPort1(Serial1); // Instantiation seems not to be working. This is changed to use Serial1 throughout the code.
  #ifdef OSD_OUTPUT
   HardwareSerial SerialPort2(Serial2); // Instantiation seems not to be working. This is changed to use Serial2 throughout the code.
  #endif
