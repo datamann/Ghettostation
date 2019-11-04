@@ -18,10 +18,8 @@
  
 //Use Mag+imu for heading or GPS heading if not set ( not used for tracker only osd relay )
  #define MAGHEADING 1
-                         
                
- #define MAGDEC -600  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
-                     // only needed if using internal compass.
+ #define MAGDEC +3,18,'N'  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/
 
 //Minimum distance in meters where it will stop moving servos.
  #define DONTTRACKUNDER  5
@@ -107,6 +105,6 @@
 
 //################################################## DEBUG ##########################################################
 #define DEBUG
-#define SHOW_DEBUG_ALL // If disabled, only NMEA packets will be displayed
+//#define SHOW_DEBUG_ALL // If disabled, only NMEA packets will be displayed
 
 //###############################################END OF CONFIG#######################################################

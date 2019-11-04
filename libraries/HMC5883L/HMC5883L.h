@@ -20,11 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#ifndef HMC5883L_h
-#define HMC5883L_h
+#ifndef HMC5883L_H
+#define HMC5883L_H
 
 #include <inttypes.h>
-#include "../Wire/Wire.h"
+#include <Wire.h>
+//#include "./Wire/Wire.h"
 
 #define HMC5883L_Address 0x1E
 #define ConfigurationRegisterA 0x00
@@ -39,31 +40,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ErrorCode_1 "Entered scale was not valid, valid gauss values are: 0.88, 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1"
 #define ErrorCode_1_Num 1
 
-struct MagnetometerScaled
-{
-	float XAxis;
-	float YAxis;
-	float ZAxis;
-};
-
-struct MagnetometerRaw
-{
-	int XAxis;
-	int YAxis;
-	int ZAxis;
-};
-
 class HMC5883L
 {
+    struct MagnetometerRaw
+    {
+        int XAxis;
+        int YAxis;
+        int ZAxis;
+    };
+    struct MagnetometerScaled
+    {
+        float XAxis;
+        float YAxis;
+        float ZAxis;
+    };
+    
 	public:
 	  HMC5883L();
 
 	  MagnetometerRaw ReadRawAxis();
 	  MagnetometerScaled ReadScaledAxis();
-  
+
 	  int SetMeasurementMode(uint8_t mode);
 	  int SetScale(float gauss);
-
+      float SetDeclination( int declination_degs , int declination_mins, char declination_dir );
 	  char* GetErrorText(int errorCode);
 
 	protected:

@@ -1,11 +1,16 @@
 /* ########################################  DEFINES ######################################################*/
-#define PROTOCOL_UAVTALK                        // OpenPilot / Taulabs protocol
-#define PROTOCOL_MSP                            // MSP from Multiwii 
+//#define PROTOCOL_UAVTALK                        // OpenPilot / Taulabs protocol
+//#define PROTOCOL_MSP                            // MSP from Multiwii 
 #define PROTOCOL_LIGHTTELEMETRY                 // Ghettostation internal protocol. 
 //#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 #define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
 #define PROTOCOL_UBLOX                          //GPS UBLOX binary protocol
 #define COMPASS                                 //Keep it enabled even if unused
+  #ifdef COMPASS
+      // Remember to set Magnetic Declination. Se line 22 in Config.h!
+    //#define HMC5883                           // HMC5883L based compass
+    #define QMC5883                             // QMC5883L based compass
+  #endif
 /* ######################################## HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
@@ -23,7 +28,7 @@ HardwareSerial SerialPort1(Serial1); // Instantiation seems not to be working. T
  HardwareSerial SerialDebug(Serial); // Instantiation seems not to be working. This is changed to use Serial throughout the code.
 #endif
 
-int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait between each byte sent.
+int softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait between each byte sent.
 
 //pan/tilt servos 
  PWMServo pan_servo;
@@ -68,7 +73,6 @@ uint8_t      uav_flightmode = 19;            // Flight mode(0-19): 0: Manual, 1:
 char* protocol = "";
 long lastpacketreceived;
 static boolean      enable_frame_request = 0;
-
 
 //home 
 int32_t home_lon;
@@ -310,5 +314,3 @@ void clear_eeprom() {
         }
         sei();       
 }
-
-

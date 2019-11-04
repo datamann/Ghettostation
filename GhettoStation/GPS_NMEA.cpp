@@ -107,10 +107,12 @@ void GPS_NMEA_Class::parse_nmea_gps(void)
 
   
   if (strncmp(buffer,"$GPGGA",6)==0){        // Check if sentence begins with $GPGGA
+    #if defined(DEBUG)
+      Serial.println(buffer);
+    #endif
     if (buffer[bufferidx-4]=='*'){           // Check for the "*" character
       NMEA_check = parseHex(buffer[bufferidx-3])*16 + parseHex(buffer[bufferidx-2]);    // Read the checksums characters
       if (GPS_checksum == NMEA_check){      // Checksum validation
-        //Serial.println("buffer");
 		NewData = 1;  // New GPS Data
         parseptr = strchr(buffer, ',')+1;
         //parseptr = strchr(parseptr, ',')+1;
@@ -163,7 +165,9 @@ void GPS_NMEA_Class::parse_nmea_gps(void)
       }
     }
   else if (strncmp(buffer,"$GPVTG",6)==0){        // Check if sentence begins with $GPVTG
-    //Serial.println(buffer);
+    #if defined(DEBUG)
+      Serial.println(buffer);
+    #endif
     if (buffer[bufferidx-4]=='*'){           // Check for the "*" character
       NMEA_check = parseHex(buffer[bufferidx-3])*16 + parseHex(buffer[bufferidx-2]);    // Read the checksums characters
       if (GPS_checksum == NMEA_check){      // Checksum validation

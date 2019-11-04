@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 HMC5883L::HMC5883L()
 {
   m_Scale = 1;
+  declination_offset_radians = 0;
 }
 
 MagnetometerRaw HMC5883L::ReadRawAxis()
@@ -102,6 +103,32 @@ int HMC5883L::SetScale(float gauss)
 int HMC5883L::SetMeasurementMode(uint8_t mode)
 {
 	Write(ModeRegister, mode);
+}
+
+float QMC5883L::SetDeclination( int declination_degs , int declination_mins, char declination_dir )
+{
+  // Convert declination to decimal degrees
+  switch(declination_dir)
+  {
+    // North and East are positive
+    case 'N':
+      declination_offset_radians = ( declination_degs + (1/60 * declination_mins)) * (M_PI / 180);
+      break;
+          
+    case 'E':
+      declination_offset_radians = ( declination_degs + (1/60 * declination_mins)) * (M_PI / 180);
+      break;
+      
+    // South and West are negative
+    case 'W':
+      declination_offset_radians =  0 - (( declination_degs + (1/60 * declination_mins) ) * (M_PI / 180));
+      break;
+          
+    case 'S':
+      declination_offset_radians =  0 - (( declination_degs + (1/60 * declination_mins) ) * (M_PI / 180));
+      break;
+  }
+    return declination_offset_radians;
 }
 
 void HMC5883L::Write(int address, int data)

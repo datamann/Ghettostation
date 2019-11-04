@@ -263,7 +263,7 @@ void gps_ublox_read() {
         {
          telemetry_ok = true;
          lastpacketreceived = millis();
-	 protocol = "UBX"; 
+	 protocol = 'UBX'; 
          uav_satellites_visible = GPS_UBLOX.NumSats;
          uav_fix_type = GPS_UBLOX.Fix;
          if (uav_fix_type == 1) {

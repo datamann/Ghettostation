@@ -20,12 +20,12 @@
 #include <avr/pgmspace.h>
 #include <Arduino.h>
 #ifdef DEBUG
-#include <MemoryFree.h>
+  #include <MemoryFree.h>
 #endif
 #include <PWMServo.h>  
 
 #ifdef TEENSYPLUS2
-#include <SoftwareSerial.h>
+  #include <SoftwareSerial.h>
 #endif
 #include <Wire.h> 
 
@@ -37,28 +37,35 @@
 #include <EEPROM.h>
 #include "GhettoStation.h"
 
-#ifdef COMPASS //use additional hmc5883L mag breakout
-//HMC5883L i2c mag b
-#include <HMC5883L.h>
+#ifdef COMPASS //use additional hmc5883L or qmc5883L mag breakout
+  #ifdef HMC5883
+    #include <HMC5883L.h> //HMC5883L i2c mag b
+    HMC5883L compass;
+  #endif
+  #ifdef QMC5883
+    #include <QMC5883L.h> //QMC5883L i2c mag b
+    QMC5883L compass;
+  #endif
+  float declinationAngle = 0;
 #endif
 
 #ifdef PROTOCOL_UAVTALK
-#include "UAVTalk.cpp"
+  #include "UAVTalk.cpp"
 #endif
 #ifdef PROTOCOL_MSP
-#include "MSP.cpp"
+  #include "MSP.cpp"
 #endif
 #ifdef PROTOCOL_LIGHTTELEMETRY
-#include "LightTelemetry.cpp"
+  #include "LightTelemetry.cpp"
 #endif
 #ifdef PROTOCOL_MAVLINK
-#include "Mavlink.cpp"
+  #include "Mavlink.cpp"
 #endif
 #ifdef PROTOCOL_NMEA
-#include "GPS_NMEA.cpp"
+  #include "GPS_NMEA.cpp"
 #endif
 #ifdef PROTOCOL_UBLOX
-#include "GPS_UBLOX.cpp"
+  #include "GPS_UBLOX.cpp"
 #endif
 
 /*
@@ -81,9 +88,9 @@ nop();
 #else
   #include <LiquidCrystal_I2C.h>
   #ifdef LCDLCM1602
-  LiquidCrystal_I2C LCD(I2CADRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //   HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+    LiquidCrystal_I2C LCD(I2CADRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //   HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
   #else
-  LiquidCrystal_I2C LCD(I2CADRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
+    LiquidCrystal_I2C LCD(I2CADRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
   #endif
 #endif
 #ifdef GLCDEnable
@@ -105,10 +112,6 @@ Metro loop50hz = Metro(20); // 50hz loop
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
-
-#if defined(COMPASS)
-HMC5883L compass;
-#endif
 
 //#################################### SETUP LOOP ####################################################
 
@@ -162,11 +165,17 @@ void setup() {
     left_button.releaseHandler(leftButtonReleaseEvents);
     right_button.releaseHandler(rightButtonReleaseEvents);
        
-#if defined(COMPASS)
-    compass = HMC5883L(); // Construct a new HMC5883 compass.
-    delay(100);
-    compass.SetScale(1.3); // Set the scale of the compass.
-    compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
+#ifdef COMPASS
+    #ifdef HMC5883
+      compass = HMC5883L(); // Construct a new HMC5883 compass.
+      delay(100);
+      compass.SetScale(1.3); // Set the scale of the compass.
+      compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
+    #endif
+    #ifdef QMC5883
+      // Nothing to do
+    #endif
+    declinationAngle = compass.SetDeclination(MAGDEC); // Magnetic Declination, find yours here: http://www.magnetic-declination.com/
 #endif
   
     delay(2500);  // Wait until osd is initialised
@@ -979,18 +988,22 @@ void calc_longitude_scaling(int32_t lat) {
 
 #if defined(COMPASS)
 void retrieve_mag() {
-// Retrieve the raw values from the compass (not scaled).
+  #ifdef HMC5883
+
+    // Retrieve the raw values from the compass (not scaled).
     MagnetometerRaw raw = compass.ReadRawAxis();
-// Retrieved the scaled values from the compass (scaled to the configured scale).
+    
+    // Retrieved the scaled values from the compass (scaled to the configured scale).
     MagnetometerScaled scaled = compass.ReadScaledAxis();
-//
-// Calculate heading when the magnetometer is level, then correct for signs of axis.
+    
+    // Calculate heading when the magnetometer is level, then correct for signs of axis.
     float heading = atan2(scaled.YAxis, scaled.XAxis);
+  
+  #endif
+  #ifdef QMC5883
+    float heading = compass.readHeading();
+  #endif
 
-// Once you have your heading, you must then add your ‘Declination Angle’, which is the ‘Error’ of the magnetic field in your location.
-// Find yours here: http://www.magnetic-declination.com/
-
-    float declinationAngle = MAGDEC / 1000; 
     heading += declinationAngle;
     
     // Correct for when signs are reversed.
