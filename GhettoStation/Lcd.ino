@@ -206,6 +206,8 @@ void lcddisp_sethome() {
 
 void lcddisp_setbearing() {
     switch (configuration.bearing_method) {
+      
+        // 2: Manual
         case 2:
             if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
                 home_bearing+=10;
@@ -220,9 +222,13 @@ void lcddisp_setbearing() {
                 delay(500);   
             }
             break;
+            
+        // 3: FC Compass
         case 3:
             home_bearing = uav_heading;  // use compass data from the uav. 
             break;
+            
+        // 4: GS Compass
         case 4:
             retrieve_mag();
             break;
@@ -242,15 +248,16 @@ void lcddisp_setbearing() {
                     sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
                 break;
             case 2:
+                // 1: Put UAV 20m away
                if (configuration.bearing_method == 1) 
                    string_load2.copy(currentline);  
                else
                    string_shome7.copy(currentline);
                break;
             case 3:
-                if (configuration.bearing_method == 1)
+                if (configuration.bearing_method == 1) // 1: Put UAV 20m away
                     string_shome8.copy(currentline);
-                else if (configuration.bearing_method == 2)
+                else if (configuration.bearing_method == 2) // 2: Manual
                     sprintf(currentline, "     << %3d >>", home_bearing);
                 else
                     sprintf(currentline, "        %3d   ", home_bearing);
@@ -478,15 +485,23 @@ void lcddisp_bearing_method() {
                 switch (configuration.bearing_method) {
                     case 1:
                         //currentline = "MSP"; break;
+
+                        // 1: Put UAV 20m away
                         string_bearing1.copy(currentline); break;
                     case 2:
                         //currentline = "LTM"; break;
+
+                        // 2: Manual
                         string_bearing2.copy(currentline); break;
                     case 3:
                         //currentline = "MavLink"; break;
+
+                        // 3: FC Compass
                         string_bearing3.copy(currentline); break;
                     case 4:
                         //currentline = "NMEA"; break;
+
+                        // 4: GS Compass
                         string_bearing4.copy(currentline); break;
                 }
                 break;

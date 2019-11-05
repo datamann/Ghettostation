@@ -173,7 +173,7 @@ void setup() {
       compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
     #endif
     #ifdef QMC5883
-      // Nothing to do
+      compass.init();
     #endif
     declinationAngle = compass.SetDeclination(MAGDEC); // Magnetic Declination, find yours here: http://www.magnetic-declination.com/
 #endif
@@ -263,7 +263,7 @@ void check_activity() {
                     lcddisp_sethome();
                 else if (home_pos) {
                     if (!home_bear) { 
-                        lcddisp_setbearing();   
+                        lcddisp_setbearing();
                     }
                     else 
                         lcddisp_homeok();

@@ -105,6 +105,6 @@
 
 //################################################## DEBUG ##########################################################
 #define DEBUG
-//#define SHOW_DEBUG_ALL // If disabled, only NMEA packets will be displayed
+#define SHOW_DEBUG_ALL // If disabled, only NMEA packets will be displayed
 
 //###############################################END OF CONFIG#######################################################
